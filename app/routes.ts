@@ -10,6 +10,6 @@ export default [
     route("login", "./login.tsx"),
     route("logout", "./logout.tsx"),
     index("./search.tsx"),
-    route("match", "./match.tsx"),
+    // route("match", "./match.tsx"),
   ]),
 ] satisfies RouteConfig;

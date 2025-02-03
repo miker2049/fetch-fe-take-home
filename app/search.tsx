@@ -12,8 +12,9 @@ import {
   type SearchDogsParams,
 } from "./api";
 import { DogResult } from "./Dog";
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { SmallDogCard } from "./SmallDogCard";
+import { Match } from "./Match";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -100,8 +101,40 @@ export default function Search({ loaderData }: Route.ComponentProps) {
       return newFaves;
     });
   };
+
+  // match modal
+  //
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [showMatch, setShowMatch] = useState(false);
+
+  const openModal = () => {
+    dialogRef.current?.showModal();
+    console.log(faveIds);
+    setShowMatch(true);
+  };
+
+  const closeModal = () => {
+    dialogRef.current?.close();
+    setShowMatch(false);
+  };
+
+  const faveIds = useMemo(() => faveDogs.map((it) => it.id), [faveDogs]);
   return (
     <div className="md:px-24 px-4">
+      <dialog ref={dialogRef} className="nes-dialog m-auto" id="dialog-default">
+        <form method="dialog">
+          <Match ids={faveIds} showing={showMatch} />
+          <button
+            className="nes-btn is-primary centered m-2"
+            onClick={() => {
+              setFaveDogs([]);
+              closeModal();
+            }}
+          >
+            Start again?
+          </button>
+        </form>
+      </dialog>
       <details>
         <summary>Your faves</summary>
         <div>
@@ -111,9 +144,15 @@ export default function Search({ loaderData }: Route.ComponentProps) {
                 <SmallDogCard {...dog} key={`fave-dog-${idx}`} />
               ))}
               {faveDogs.length > 0 && (
-                <button type="button" className="nes-btn">
-                  Find your match!
-                </button>
+                <section>
+                  <button
+                    type="button"
+                    className="nes-btn is-primary"
+                    onClick={openModal}
+                  >
+                    Get your match
+                  </button>
+                </section>
               )}
             </div>
           </div>
