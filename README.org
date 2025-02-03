@@ -32,8 +32,9 @@ All info plus checkbox to select as favorite
 *** TODO Its a match page/modal
 *** TODO style it
 *** TODO Host it
-** TODO Dev log
+** NEXT Dev log
 :LOGBOOK:
+CLOCK: [2025-02-03 Mon 11:24]
 CLOCK: [2025-02-03 Mon 09:24]--[2025-02-03 Mon 09:54] =>  0:30
 CLOCK: [2025-02-03 Mon 08:53]--[2025-02-03 Mon 09:23] =>  0:30
 :END:
@@ -57,4 +58,54 @@ export default [
     route("match", "./match.tsx"),
   ]),
 ] satisfies RouteConfig;
+#+end_src
+**** api/auth
+We live in the future:
+#+begin_quote
+Given this info, generate an api.ts file with helper functions for everything. We expect the endpoint to be at =import.meta.env.VITE_API_ENDPOINT=.:
+
+Here's a concise =api.ts= file with helper functions:
+...
+
+#+begin_src typescript :tangle
+interface Dog {
+    id: string;
+    img: string;
+#+end_quote
+**** auth done
+After some react router refresher, we are back.  Login, logout and protected routes are simple with actions.. just need to remember to do client action vs server where that makes sense.
+#+begin_src typescript
+// ta da
+export async function clientAction({ request }: Route.ClientActionArgs) {
+  const formData = await request.formData();
+  const email = String(formData.get("email"));
+  const name = String(formData.get("name"));
+  if (!name || !email) {
+    return { err: "Please enter both fields!" };
+  }
+  try {
+    const res = await login(name, email);
+
+    if (res.status === 200) {
+      localStorage.setItem("dogmatch-user", name);
+      return redirect("/");
+    } else return { err: "Trouble logging in... Sorry about that!" };
+  } catch (err) {
+    return { err: "An API problem, hmmm " + err };
+  }
+}
+
+export default function Login() {
+  return (
+    <div>
+      <Form method="POST">
+        <label htmlFor="name">Name:</label>
+        <input type="text" name="name" />
+        <label htmlFor="email">Email:</label>
+        <input type="text" name="email" />
+        <button type="submit">Login</button>
+      </Form>
+    </div>
+  );
+}
 #+end_src

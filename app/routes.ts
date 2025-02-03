@@ -8,6 +8,7 @@ import {
 export default [
   layout("./layout.tsx", [
     route("login", "./login.tsx"),
+    route("logout", "./logout.tsx"),
     index("./search.tsx"),
     route("match", "./match.tsx"),
   ]),

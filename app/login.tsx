@@ -1,45 +1,44 @@
 import { useEffect, useState } from "react";
 import type { Route } from "./+types/login";
+import { Form, redirect } from "react-router";
+import { login } from "./api";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Login to dog app" },
+    { title: "Login to DogMatch" },
     { name: "description", content: "Please login to see dogs" },
   ];
 }
 
-async function isLoggedIn() {
+export async function clientAction({ request }: Route.ClientActionArgs) {
+  const formData = await request.formData();
+  const email = String(formData.get("email"));
+  const name = String(formData.get("name"));
+  if (!name || !email) {
+    return { err: "Please enter both fields!" };
+  }
   try {
-    const breeds = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/breeds`);
-    if (breeds.status !== 200) return false;
-    else return true;
+    const res = await login(name, email);
+
+    if (res.status === 200) {
+      localStorage.setItem("dogmatch-user", name);
+      return redirect("/");
+    } else return { err: "Trouble logging in... Sorry about that!" };
   } catch (err) {
-    return false;
+    return { err: "An API problem, hmmm " + err };
   }
 }
 
 export default function Login() {
-  const [loggedIn, setLoggedIn] = useState<{ email: string }>();
-  // useEffect(()=>{
-
-  // })
   return (
-    <>
-      <h1> Find the dog you want, DogSearch</h1>
-      <div>{loggedIn && <p> You are logged in as {loggedIn.email}</p>}</div>
-      <div>{!loggedIn && <p> You are not logged in</p>}</div>
-      <form>
-        <label htmlFor="login-email-input">Email:</label>
-        <input type="text" name="login-email-input" />
-        <label htmlFor="login-pw-input">Password:</label>
-        <input type="password" name="login-pw-input" />
-        <button
-          type="button"
-          onClick={() => isLoggedIn().then((it) => console.log(it))}
-        >
-          Login
-        </button>
-      </form>
-    </>
+    <div>
+      <Form method="POST">
+        <label htmlFor="name">Name:</label>
+        <input type="text" name="name" />
+        <label htmlFor="email">Email:</label>
+        <input type="text" name="email" />
+        <button type="submit">Login</button>
+      </Form>
+    </div>
   );
 }
