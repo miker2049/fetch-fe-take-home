@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { type Dog, getDogs, matchDog } from "./api";
-import { SmallDogCard } from "./SmallDogCard.tsx";
+import { SmallDogCard } from "./SmallDogCard";
 
 export function Match({
   ids,

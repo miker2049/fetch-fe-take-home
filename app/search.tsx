@@ -92,7 +92,7 @@ export default function Search({ loaderData }: Route.ComponentProps) {
     return stored ? JSON.parse(stored) : [];
   });
 
-  const toggleFave = (dog: Dog) => {
+  const toggleFave = (dog: { id: string; name: string; img: string }) => {
     setFaveDogs((curr) => {
       const newFaves = curr.some((d) => d.id === dog.id)
         ? curr.filter((d) => d.id !== dog.id)
@@ -139,7 +139,18 @@ export default function Search({ loaderData }: Route.ComponentProps) {
           <div className="w-full overflow-x-auto">
             <div className="flex gap-2 p-4 overflow-x-auto">
               {faveDogs.map((dog, idx) => (
-                <SmallDogCard {...dog} key={`fave-dog-${idx}`} />
+                <div key={`fave-dog-${idx}`} className="relative group ">
+                  <div className="absolute bottom-2 right-1 z-10">
+                    <button
+                      onClick={() => toggleFave(dog)}
+                      className="nes-btn is-error opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Remove from favorites"
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <SmallDogCard {...dog} />
+                </div>
               ))}
               {faveDogs.length > 0 && (
                 <section>
@@ -165,7 +176,7 @@ export default function Search({ loaderData }: Route.ComponentProps) {
             >
               Select breed:
             </label>
-            <div class="nes-select">
+            <div className="nes-select">
               <select
                 name="breeds"
                 defaultValue={loaderData.currentBreed || ""}
@@ -201,8 +212,8 @@ export default function Search({ loaderData }: Route.ComponentProps) {
               name="page"
               id="page"
               min={1}
-              max={(loaderData.total || Infinity) / RESULT_SIZE}
-              defaultValue={loaderData.page || 1}
+              max={Math.max(1, (loaderData.total || Infinity) / RESULT_SIZE)}
+              defaultValue={Math.max(1, loaderData.page) || 1}
               className="nes-input"
             />
           </div>
