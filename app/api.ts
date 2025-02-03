@@ -1,4 +1,4 @@
-interface Dog {
+export interface Dog {
   id: string;
   img: string;
   name: string;
@@ -21,7 +21,7 @@ interface Coordinates {
   lon: number;
 }
 
-interface SearchDogsParams {
+export interface SearchDogsParams {
   breeds?: string[];
   zipCodes?: string[];
   ageMin?: number;

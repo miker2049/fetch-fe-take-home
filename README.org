@@ -32,9 +32,10 @@ All info plus checkbox to select as favorite
 *** TODO Its a match page/modal
 *** TODO style it
 *** TODO Host it
-** NEXT Dev log
+** TODO Dev log
 :LOGBOOK:
-CLOCK: [2025-02-03 Mon 11:24]
+CLOCK: [2025-02-03 Mon 12:07]--[2025-02-03 Mon 12:52] =>  0:45
+CLOCK: [2025-02-03 Mon 11:24]--[2025-02-03 Mon 11:54] =>  0:30
 CLOCK: [2025-02-03 Mon 09:24]--[2025-02-03 Mon 09:54] =>  0:30
 CLOCK: [2025-02-03 Mon 08:53]--[2025-02-03 Mon 09:23] =>  0:30
 :END:
@@ -63,15 +64,16 @@ export default [
 We live in the future:
 #+begin_quote
 Given this info, generate an api.ts file with helper functions for everything. We expect the endpoint to be at =import.meta.env.VITE_API_ENDPOINT=.:
-
-Here's a concise =api.ts= file with helper functions:
 ...
+ROBOT: Here's a concise =api.ts= file with helper functions:
 
 #+begin_src typescript :tangle
 interface Dog {
     id: string;
     img: string;
 #+end_quote
+
+Only change here is that auth routes do not return json, so we cant assume that.
 **** auth done
 After some react router refresher, we are back.  Login, logout and protected routes are simple with actions.. just need to remember to do client action vs server where that makes sense.
 #+begin_src typescript
@@ -109,3 +111,9 @@ export default function Login() {
   );
 }
 #+end_src
+**** Moving on to search
+Ideally, we do it the react router way but also have classic query params in the url.  So if we can get it with query params first, then we can just make the form.
+
+...no I think we will just do it react/react-router way.  It will be fancier and its not reinventing anything.
+
+This all follows naturally.  Pretty much got it but need to do pagination.
