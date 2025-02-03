@@ -14,6 +14,7 @@ export function Match({
   const [match, setMatch] = useState<{ match?: Dog; err?: string }>();
   const [progress, setProgress] = useState(0);
   useEffect(() => {
+    if (!showing) return;
     setMatch(undefined); // Reset match when ids change
     setProgress(0); // Reset progress
 
@@ -24,14 +25,15 @@ export function Match({
 
     const timer = setTimeout(() => {
       try {
-        matchDog(ids)
-          .then((match) => {
-            return getDogs([match.match]);
-          })
-          .then((dog) => {
-            setProgress(100); // Complete the progress
-            setMatch({ match: dog[0] });
-          });
+        if (ids)
+          matchDog(ids)
+            .then((match) => {
+              return getDogs([match.match]);
+            })
+            .then((dog) => {
+              setProgress(100); // Complete the progress
+              setMatch({ match: dog[0] });
+            });
       } catch (err) {
         setMatch({ err: String(err) });
       }
@@ -42,6 +44,7 @@ export function Match({
       clearInterval(progressInterval);
     }; // Cleanup timers on unmount
   }, [ids, showing]);
+
   if (!showing) return null;
 
   if (match?.match && !match.err) {
