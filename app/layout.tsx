@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router";
+import { NavLink, Outlet, redirect, useNavigate } from "react-router";
 import type { Route } from "./+types/layout";
 import { isLoggedIn } from "./utils";
 
@@ -12,12 +12,28 @@ export async function clientLoader() {
 }
 
 export default function BaseLayout({ loaderData }: Route.ComponentProps) {
+  const navigate = useNavigate();
   return (
     <div>
-      <header>
+      <header className="flex gap-x-2 items-center">
         <p className="flex-grow">DogMatch</p>
-        {loaderData && <p>Logged in as {loaderData.name}</p>}
-        {loaderData && <NavLink to="/logout">Logout</NavLink>}
+        {loaderData && (
+          <p>
+            Logged in as{" "}
+            <span className="nes-text is-primary">{loaderData.name}</span>
+          </p>
+        )}
+        {loaderData && (
+          <button
+            className="nes-btn is-error"
+            type="button"
+            onClick={() => {
+              navigate("/logout");
+            }}
+          >
+            Logout
+          </button>
+        )}
       </header>
       <div className="main-container">
         <Outlet />
