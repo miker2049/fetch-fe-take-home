@@ -11,7 +11,7 @@ export function DogResult({
   toggleFavorite: () => void;
 }) {
   return (
-    <div className="flex p-4 gap-4 items-center border rounded-lg shadow-md m-4">
+    <div className="flex p-4 gap-4 items-center nes-container m-4">
       <div className="w-48 h-48 flex-shrink-0">
         <img
           src={data.img}
@@ -25,18 +25,16 @@ export function DogResult({
         <p className="text-gray-700">Age: {data.age}</p>
         <p className="text-gray-700">Zip: {data.zip_code}</p>
       </div>
-      <div className="flex items-center gap-2">
-        <label htmlFor="fave" className="text-sm">
-          Favorite?
-        </label>
+      <label>
         <input
           type="checkbox"
           name="fave"
           onChange={toggleFavorite}
           checked={isFave}
-          className="w-5 h-5"
+          className="nes-checkbox w-5 h-5"
         />
-      </div>
+        <span>Favorite?</span>
+      </label>
     </div>
   );
 }

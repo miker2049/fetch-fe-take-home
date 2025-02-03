@@ -101,51 +101,90 @@ export default function Search({ loaderData }: Route.ComponentProps) {
     });
   };
   return (
-    <>
-      <div>
-        <p className="bold">Your faves:</p>
-        {faveDogs.length > 0 && <button type="button">Find your match!</button>}
-        <div className="w-full overflow-x-auto">
-          <div className="flex gap-2 p-4 overflow-x-auto">
-            {faveDogs.map((dog, idx) => (
-              <SmallDogCard {...dog} key={`fave-dog-${idx}`} />
-            ))}
+    <div className="md:px-24 px-4">
+      <details>
+        <summary>Your faves</summary>
+        <div>
+          <div className="w-full overflow-x-auto">
+            <div className="flex gap-2 p-4 overflow-x-auto">
+              {faveDogs.map((dog, idx) => (
+                <SmallDogCard {...dog} key={`fave-dog-${idx}`} />
+              ))}
+              {faveDogs.length > 0 && (
+                <button type="button" className="nes-btn">
+                  Find your match!
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </details>
       <Form method="GET">
-        <label htmlFor="breeds">Select breed:</label>
-        <select name="breeds" defaultValue={loaderData.currentBreed || ""}>
-          {loaderData.breeds.map((it: string) => (
-            <option key={it} value={it}>
-              {it}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="zipcode">Enter zip:</label>
-        <input
-          type="number"
-          name="zipCodes"
-          defaultValue={loaderData.currentZip || ""}
-        />
-        <label htmlFor="page">Page</label>
-        <input
-          type="number"
-          name="page"
-          min={1}
-          max={(loaderData.total || Infinity) / RESULT_SIZE}
-          defaultValue={loaderData.page || 1}
-        />
-        <button type="submit">Search</button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="space-y-2">
+            <label
+              htmlFor="breeds"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Select breed:
+            </label>
+            <div class="nes-select">
+              <select
+                name="breeds"
+                defaultValue={loaderData.currentBreed || ""}
+              >
+                {loaderData.breeds.map((it: string) => (
+                  <option key={it} value={it}>
+                    {it}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="nes-field">
+            <label
+              htmlFor="zipcode"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Enter zip:
+            </label>
+            <input
+              type="number"
+              name="zipCodes"
+              defaultValue={loaderData.currentZip || ""}
+              className="nes-input"
+            />
+          </div>
+
+          <div className="nes-field">
+            <label htmlFor="page">Page</label>
+            <input
+              type="number"
+              name="page"
+              id="page"
+              min={1}
+              max={(loaderData.total || Infinity) / RESULT_SIZE}
+              defaultValue={loaderData.page || 1}
+              className="nes-input"
+            />
+          </div>
+
+          <div className="flex items-end">
+            <button type="submit" className="nes-btn is-primary">
+              Search
+            </button>
+          </div>
+        </div>
       </Form>
       {results.dogs && (
         <div>
-          <p>
-            Displaying {(results.page - 1) * RESULT_SIZE}-
-            {(results.dogs?.length || 0) + (results.page - 1) * RESULT_SIZE} of{" "}
-            {results.total} results
-          </p>
-          <div className="flex">
+          <div className="nes-container flex gap-x-4 m-2">
+            <p className="flex-grow">
+              Displaying {(results.page - 1) * RESULT_SIZE}-
+              {(results.dogs?.length || 0) + (results.page - 1) * RESULT_SIZE}{" "}
+              of {results.total} results
+            </p>
             {prevParams && <NavLink to={"/?" + prevParams}>previous</NavLink>}
             {nextParams && <NavLink to={"/?" + nextParams}>next</NavLink>}
           </div>
@@ -159,6 +198,6 @@ export default function Search({ loaderData }: Route.ComponentProps) {
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 }
