@@ -123,16 +123,14 @@ export default function Search({ loaderData }: Route.ComponentProps) {
     <div className="md:px-24 px-4">
       <dialog ref={dialogRef} className="nes-dialog m-auto" id="dialog-default">
         <form method="dialog">
-          <Match ids={faveIds} showing={showMatch} />
-          <button
-            className="nes-btn is-primary centered m-2"
-            onClick={() => {
+          <Match
+            ids={faveIds}
+            showing={showMatch}
+            close={() => {
               setFaveDogs([]);
               closeModal();
             }}
-          >
-            Start again?
-          </button>
+          />
         </form>
       </dialog>
       <details>
