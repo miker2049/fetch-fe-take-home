@@ -60,7 +60,7 @@ export default [
   ]),
 ] satisfies RouteConfig;
 #+end_src
-**** api/auth
+*** api/auth
 We live in the future:
 #+begin_quote
 Given this info, generate an api.ts file with helper functions for everything. We expect the endpoint to be at =import.meta.env.VITE_API_ENDPOINT=.:
@@ -74,7 +74,7 @@ interface Dog {
 #+end_quote
 
 Only change here is that auth routes do not return json, so we cant assume that.
-**** auth done
+*** auth done
 After some react router refresher, we are back.  Login, logout and protected routes are simple with actions.. just need to remember to do client action vs server where that makes sense.
 #+begin_src typescript
 // ta da
@@ -111,9 +111,13 @@ export default function Login() {
   );
 }
 #+end_src
-**** Moving on to search
+*** Moving on to search
 Ideally, we do it the react router way but also have classic query params in the url.  So if we can get it with query params first, then we can just make the form.
 
 ...no I think we will just do it react/react-router way.  It will be fancier and its not reinventing anything.
 
 This all follows naturally.  Pretty much got it but need to do pagination.
+*** Cutesy NES css
+Try to distinguish ourselves a bit.. Ty to https://nostalgic-css.github.io/NES.css/
+*** Make match a simple modal
+This makes more sense, and we can simulate the work happening with the match.

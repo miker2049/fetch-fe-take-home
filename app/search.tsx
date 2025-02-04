@@ -38,6 +38,9 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     if (pageParam) from = ((parseInt(pageParam) - 1) * RESULT_SIZE).toString();
     if (fromParam) from = fromParam;
 
+    const sortParam = searchParams.get("sort");
+    const sort = sortParam || "breed:asc";
+
     let dogs = null;
     let searchResults = null;
 
@@ -46,6 +49,7 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
         breeds: [breed],
         size: RESULT_SIZE,
         from,
+        sort,
       };
 
       if (zipcode && isValidZip(zipcode)) {
@@ -233,6 +237,15 @@ export default function Search({ loaderData }: Route.ComponentProps) {
               {(results.dogs?.length || 0) + (results.page - 1) * RESULT_SIZE}{" "}
               of {results.total} results
             </p>
+            <label>
+              <input type="radio" className="nes-radio" name="answer" />
+              <span>A-Z</span>
+            </label>
+
+            <label className="flex-grow">
+              <input type="radio" className="nes-radio" name="answer" />
+              <span>Z-A</span>
+            </label>
             {prevParams && <NavLink to={"/?" + prevParams}>previous</NavLink>}
             {nextParams && <NavLink to={"/?" + nextParams}>next</NavLink>}
           </div>
