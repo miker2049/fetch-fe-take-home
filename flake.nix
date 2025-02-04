@@ -15,6 +15,7 @@
             pkgs.nodejs_23
             pkgs.typescript-language-server
             pkgs.nodePackages.prettier
+            pkgs.flyctl
           ];
         };
       });

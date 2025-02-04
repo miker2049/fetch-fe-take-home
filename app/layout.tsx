@@ -1,4 +1,4 @@
-import { NavLink, Outlet, redirect, useNavigate } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import type { Route } from "./+types/layout";
 import { isLoggedIn } from "./utils";
 
@@ -15,24 +15,24 @@ export default function BaseLayout({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
   return (
     <div>
-      <header className="flex gap-x-2 items-center">
-        <p className="flex-grow">DogMatch</p>
+      <header className="flex items-center gap-4 bg-slate-200 px-6 py-3">
+        <h1 className="text-xl font-bold flex-grow">DogMatch</h1>
         {loaderData && (
-          <p>
-            Logged in as{" "}
-            <span className="nes-text is-primary">{loaderData.name}</span>
-          </p>
-        )}
-        {loaderData && (
-          <button
-            className="nes-btn is-error"
-            type="button"
-            onClick={() => {
-              navigate("/logout");
-            }}
-          >
-            Logout
-          </button>
+          <>
+            <p className="text-sm whitespace-nowrap">
+              Logged in as{" "}
+              <span className="nes-text is-primary">{loaderData.name}</span>
+            </p>
+            <button
+              className="nes-btn is-error"
+              type="button"
+              onClick={() => {
+                navigate("/logout");
+              }}
+            >
+              Logout
+            </button>
+          </>
         )}
       </header>
       <div className="main-container">

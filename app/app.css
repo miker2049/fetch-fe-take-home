@@ -15,7 +15,5 @@ body {
 }
 
 header {
-  padding: 1em;
   display: flex;
-  background-color: #e2e2e2;
 }
