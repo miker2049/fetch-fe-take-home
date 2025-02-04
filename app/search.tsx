@@ -1,4 +1,10 @@
-import { Form, NavLink, redirect, useSearchParams } from "react-router";
+import {
+  Form,
+  NavLink,
+  redirect,
+  useSearchParams,
+  useSubmit,
+} from "react-router";
 import { isLoggedIn, isValidZip } from "./utils";
 import type { Route } from "./+types/search";
 
@@ -123,6 +129,8 @@ export default function Search({ loaderData }: Route.ComponentProps) {
   };
 
   const faveIds = useMemo(() => faveDogs.map((it) => it.id), [faveDogs]);
+
+  const submit = useSubmit();
   return (
     <div className="md:px-24 px-4">
       <dialog ref={dialogRef} className="nes-dialog m-auto" id="dialog-default">
@@ -237,15 +245,61 @@ export default function Search({ loaderData }: Route.ComponentProps) {
               {(results.dogs?.length || 0) + (results.page - 1) * RESULT_SIZE}{" "}
               of {results.total} results
             </p>
-            <label>
-              <input type="radio" className="nes-radio" name="answer" />
-              <span>A-Z</span>
-            </label>
-
-            <label className="flex-grow">
-              <input type="radio" className="nes-radio" name="answer" />
-              <span>Z-A</span>
-            </label>
+            <Form method="GET" className="flex items-center gap-4">
+              <input
+                type="hidden"
+                name="breeds"
+                value={results.currentBreed || ""}
+              />
+              <input
+                type="hidden"
+                name="zipCodes"
+                value={results.currentZip || ""}
+              />
+              <input type="hidden" name="page" value={results.page} />
+              <label>
+                <input
+                  type="radio"
+                  className="nes-radio"
+                  name="sort"
+                  value="name:asc"
+                  defaultChecked={!results.sort?.includes("desc")}
+                  onChange={(e) =>
+                    submit(
+                      {
+                        breeds: [results.currentBreed],
+                        zipCodes: [results.zipCodes],
+                        page: 1,
+                        sort: "name:asc",
+                      },
+                      { action: "/", method: "get" }
+                    )
+                  }
+                />
+                <span>A-Z</span>
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  className="nes-radio"
+                  name="sort"
+                  value="name:desc"
+                  defaultChecked={results.sort?.includes("desc")}
+                  onChange={(e) =>
+                    submit(
+                      {
+                        breeds: [results.currentBreed],
+                        zipCodes: [results.zipCodes],
+                        page: 1,
+                        sort: "name:desc",
+                      },
+                      { action: "/", method: "get" }
+                    )
+                  }
+                />
+                <span>Z-A</span>
+              </label>
+            </Form>
             {prevParams && <NavLink to={"/?" + prevParams}>previous</NavLink>}
             {nextParams && <NavLink to={"/?" + nextParams}>next</NavLink>}
           </div>
