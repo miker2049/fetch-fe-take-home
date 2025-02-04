@@ -73,6 +73,7 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
       currentBreed: breed,
       currentZip: zipcode,
       page: Math.floor(parseInt(from) / RESULT_SIZE) + 1,
+      sort,
     };
   } catch (_) {
     return redirect("/login");
@@ -245,63 +246,53 @@ export default function Search({ loaderData }: Route.ComponentProps) {
               {(results.dogs?.length || 0) + (results.page - 1) * RESULT_SIZE}{" "}
               of {results.total} results
             </p>
-            <Form method="GET" className="flex items-center gap-4">
-              <input
-                type="hidden"
-                name="breeds"
-                value={results.currentBreed || ""}
-              />
-              <input
-                type="hidden"
-                name="zipCodes"
-                value={results.currentZip || ""}
-              />
-              <input type="hidden" name="page" value={results.page} />
-              <label>
-                <input
-                  type="radio"
-                  className="nes-radio"
-                  name="sort"
-                  value="name:asc"
-                  defaultChecked={!results.sort?.includes("desc")}
-                  onChange={(e) =>
-                    submit(
-                      {
-                        breeds: [results.currentBreed],
-                        zipCodes: [results.zipCodes],
-                        page: 1,
-                        sort: "name:asc",
-                      },
-                      { action: "/", method: "get" }
-                    )
-                  }
-                />
-                <span>A-Z</span>
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  className="nes-radio"
-                  name="sort"
-                  value="name:desc"
-                  defaultChecked={results.sort?.includes("desc")}
-                  onChange={(e) =>
-                    submit(
-                      {
-                        breeds: [results.currentBreed],
-                        zipCodes: [results.zipCodes],
-                        page: 1,
-                        sort: "name:desc",
-                      },
-                      { action: "/", method: "get" }
-                    )
-                  }
-                />
-                <span>Z-A</span>
-              </label>
-            </Form>
-            {prevParams && <NavLink to={"/?" + prevParams}>previous</NavLink>}
-            {nextParams && <NavLink to={"/?" + nextParams}>next</NavLink>}
+            <div className="nes-select">
+              <select
+                value={results.sort || "name:asc"}
+                onChange={(e) =>
+                  submit(
+                    {
+                      breeds: results.currentBreed,
+                      zipCodes: results.currentZip,
+                      page: 1,
+                      sort: e.target.value,
+                    },
+                    { method: "get" }
+                  )
+                }
+              >
+                <option value="name:asc">Name A-Z</option>
+                <option value="name:desc">Name Z-A</option>
+                <option value="breed:asc">Breed A-Z</option>
+                <option value="breed:desc">Breed Z-A</option>
+                <option value="age:asc">Youngest First</option>
+                <option value="age:desc">Oldest first</option>
+              </select>
+            </div>
+            <div className="flex gap-2">
+              {prevParams && (
+                <button 
+                  className="nes-btn"
+                  onClick={() => submit(
+                    Object.fromEntries(new URLSearchParams(prevParams)),
+                    { method: "get" }
+                  )}
+                >
+                  ← Previous
+                </button>
+              )}
+              {nextParams && (
+                <button
+                  className="nes-btn"
+                  onClick={() => submit(
+                    Object.fromEntries(new URLSearchParams(nextParams)),
+                    { method: "get" }
+                  )}
+                >
+                  Next →
+                </button>
+              )}
+            </div>
           </div>
           {results.dogs.map((dog: Dog) => (
             <DogResult
