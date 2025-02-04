@@ -146,7 +146,7 @@ export default function Search({ loaderData }: Route.ComponentProps) {
           />
         </form>
       </dialog>
-      <details>
+      <details className="my-1">
         <summary>Your faves</summary>
         <div>
           <div className="w-full overflow-x-auto">
@@ -180,6 +180,7 @@ export default function Search({ loaderData }: Route.ComponentProps) {
           </div>
         </div>
       </details>
+      <hr className="my-3 boder border-2"></hr>
       <Form method="GET">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="space-y-2">
@@ -271,12 +272,14 @@ export default function Search({ loaderData }: Route.ComponentProps) {
             </div>
             <div className="flex gap-2">
               {prevParams && (
-                <button 
+                <button
                   className="nes-btn"
-                  onClick={() => submit(
-                    Object.fromEntries(new URLSearchParams(prevParams)),
-                    { method: "get" }
-                  )}
+                  onClick={() =>
+                    submit(
+                      Object.fromEntries(new URLSearchParams(prevParams)),
+                      { method: "get" }
+                    )
+                  }
                 >
                   ← Previous
                 </button>
@@ -284,10 +287,12 @@ export default function Search({ loaderData }: Route.ComponentProps) {
               {nextParams && (
                 <button
                   className="nes-btn"
-                  onClick={() => submit(
-                    Object.fromEntries(new URLSearchParams(nextParams)),
-                    { method: "get" }
-                  )}
+                  onClick={() =>
+                    submit(
+                      Object.fromEntries(new URLSearchParams(nextParams)),
+                      { method: "get" }
+                    )
+                  }
                 >
                   Next →
                 </button>
