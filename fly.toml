@@ -16,6 +16,10 @@ primary_region = 'den'
   min_machines_running = 0
   processes = ['app']
 
+[env]
+  VITE_API_ENDPOINT=https://frontend-take-home-service.fetch.com
+
+
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
