@@ -9,7 +9,7 @@ import { isLoggedIn, isValidZip } from "./utils";
 import type { Route } from "./+types/search";
 
 const RESULT_SIZE = 25;
-
+import { DogCache } from "./utils";
 import {
   getBreeds,
   getDogs,
@@ -28,6 +28,9 @@ export function meta({}: Route.MetaArgs) {
     { name: "description", content: "Match with a dog, on DogMatch." },
   ];
 }
+
+const dogCache = new DogCache();
+
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   try {
     const breeds = await getBreeds();
@@ -62,7 +65,16 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
         q.zipCodes = [zipcode];
       }
 
-      searchResults = await searchDogs(q);
+      const cacheResult = dogCache.getCacheResult(breed, parseInt(from));
+
+      if (!cacheResult) {
+        searchResults = await searchDogs(q);
+        dogCache.cacheResults(breed, parseInt(from), searchResults);
+      } else {
+
+        searchResults = cacheResult;
+      }
+
       dogs = await getDogs(searchResults.resultIds);
     }
 
@@ -75,8 +87,9 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
       page: Math.floor(parseInt(from) / RESULT_SIZE) + 1,
       sort,
     };
-  } catch (_) {
-    return redirect("/login");
+  } catch (err) {
+    console.log(err);
+    return { error: true, message: err.toString() };
   }
 }
 
@@ -88,6 +101,7 @@ export type FaveDog = {
 
 export default function Search({ loaderData }: Route.ComponentProps) {
   const results = loaderData;
+  if (results.error) return <p>error</p>;
   // grab the query params from "next" and "prev" results
   // Looks a little hacky, but its less hacky then just regexing probably... right?
   const nextParams = results.next
